@@ -34,7 +34,8 @@ const chartConfig = {
 
 function Profile(props) {
     const [user, setUser] = useState({})        
-    const [populations, setPopulations] = useState([])          
+    const [populations, setPopulations] = useState([])        
+    //call when component loaded => componentDidMount    
     useEffect(() => {        
         UserRepository.getUserDetail()
             .then(responseUser => setUser(responseUser))            
@@ -42,7 +43,8 @@ function Profile(props) {
             drilldowns: 'Nation',
             measures: 'Population'
         }).then(responsePopulations => setPopulations(responsePopulations))    
-    },[])  
+    },[])
+    //UserRepository.getUserDetail()    
     const {email, dateOfBirth, 
         gender,userId, 
         address, username,url, 
@@ -93,7 +95,25 @@ function Profile(props) {
         </View>
         <View>      
             <Text>{JSON.stringify(populations)}</Text>      
-
+            {/* <LineChart
+                data={{
+                    labels: populations.sort((a, b) => parseInt(a.year)-parseInt(b.year))
+                        .map(item => item.year),
+                    datasets: [
+                      {
+                        data: populations.sort((a, b) => parseInt(a.year)-parseInt(b.year))
+                            .map(item => Math.floor(item.population/1000_000, 0)),
+                        color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`, // optional
+                        strokeWidth: 2 // optional
+                      }
+                    ],
+                    legend: ["Population/Year"] // optional
+                  }}
+                width={screenWidth}
+                height={220}
+                chartConfig={chartConfig}
+                bezier
+            /> */}
             
         </View>
 

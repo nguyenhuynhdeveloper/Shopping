@@ -15,14 +15,16 @@ import Icon from 'react-native-vector-icons/FontAwesome5'
 import {isValidEmail, isValidPassword} from '../utilies/Validations'
 import {    
     auth,
-    createUserWithEmailAndPassword, 
-    sendEmailVerification,       
+    createUserWithEmailAndPassword, // Tạo 1 tài khoản và authentication
+    sendEmailVerification,       // Gửi email sau khi đăng ký để xác thực email
 } from '../firebase/firebase'
 import {UIHeader} from '../components'
 function Register(props) {
     const [keyboardIsShown, setKeyboardIsShown] = useState(false)
+    //states for validating
     const [errorEmail, setErrorEmail] = useState('')
     const [errorPassword, setErrorPassword] = useState('')
+    //states to store email/password
     const [email, setEmail] = useState('abc@gmail.com')
     const [password, setPassword] = useState('999999')
     const [retypePassword, setRetypePassword] = useState('999999')
@@ -31,7 +33,8 @@ function Register(props) {
                             && isValidPassword(password) == true
                             && password == retypePassword
 
-    useEffect(()=>{      
+    useEffect(()=>{
+        //componentDidMount        
         Keyboard.addListener('keyboardDidShow', () => {            
             setKeyboardIsShown(true)
         })
@@ -39,7 +42,9 @@ function Register(props) {
             setKeyboardIsShown(false)
         })               
     })
+    //navigation
     const {navigation, route} = props
+    //functions of navigate to/back
     const {navigate, goBack} = navigation
     return <View     
     style={{
@@ -187,15 +192,15 @@ function Register(props) {
             <TouchableOpacity
                 disabled = {isValidationOK() == false}
                 onPress={() => {
-                   
-                    createUserWithEmailAndPassword(auth, email, password)    
+                    //alert(`Email = ${email}, password = ${password}`)
+                    createUserWithEmailAndPassword(auth, email, password)    // Tạo 1 Authentication trên mục Authentication của firebase . bao gồm auth và email - password được đổi thành access token
                     .then((userCredential) => {                        
-                        const user = userCredential.user 
+                        const user = userCredential.user  // Cái biến user  là 1 object gồm rất nhiều trường uid . verifiEmail . email . accesstoken  bên trong  
                         
-                        sendEmailVerification(user).then(()=>{       
+                        sendEmailVerification(user).then(()=>{        // Gửi email tới cái email được đăng ký để xác thực email
                             console.log('Email verification sent')
                         })                        
-                        navigate('UITab')    
+                        navigate('UITab')    //Khi đăng ký thành công cũng phải chuyển vào màn hình giao diện chính 
 
                     }).catch((error) => {
                         

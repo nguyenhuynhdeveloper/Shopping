@@ -131,7 +131,7 @@ function Welcome(props) {
                                 isSelected: eachAccountType.name == accountType.name
                             }                            
                         }));
-                       
+                        alert('Developing Feature')
                     }}
                         title={accountType.name}
                         isSelected={accountType.isSelected}

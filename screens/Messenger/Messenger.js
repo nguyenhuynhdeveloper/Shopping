@@ -138,7 +138,7 @@ function Messenger(props) {
                 item={item}
                 key={`${item.timestamp}`} />}
             ref={(ref) => {
-                listViewRef = ref     
+                listViewRef = ref     // Lôi cái biến này ra ngoài để xử lý thằng flatView
             }}
         />
 
@@ -161,28 +161,29 @@ function Messenger(props) {
                     paddingStart: 10,
                 }}
                 placeholder='Enter your message here'
-                value={typedText}    
+                value={typedText}    // Giá trị trong ô text input sẽ hiện là giá trị của biến typedText 
                 placeholderTextColor={colors.placeholder}
                 
                 
             />
 
 
-            <TouchableOpacity onPress={async () => {       
-                if (typedText.trim().length == 0) {      
+            <TouchableOpacity onPress={async () => {       // Khi ấn vào nút send : gửi đi tin nhắn thì 1 loạt hành động sảy ra
+                if (typedText.trim().length == 0) {      // Nếu xoá hết khoảng trắng ở đầu và ở cuối mà k có ký tự gì thì không làm gì 
                     return
                 }
 
-                let stringUser = await AsyncStorage.getItem("user")    
-                let myUserId = JSON.parse(stringUser).userId          
-                let myFriendUserId = props.route.params.user.userId     
-
+                let stringUser = await AsyncStorage.getItem("user")     //Lấy dữ liệu user là nguời đăng nhập từ bộ nhớ máy --- 
+                let myUserId = JSON.parse(stringUser).userId            // Lấy ra cái userUid của người đang đăng nhâp vào app--- dữ liệu lấy về chỉ là 1 chuỗi string thôi muốn dùng phải chuyển về dạng object  
+                let myFriendUserId = props.route.params.user.userId     // Lấy dữ liệu danh sách user người đã đăng ký vào ứng dụng về
+                // Component truyền vào component messenger nguyên cái data user thông qua prop.route.params
+                //save to Firebase DB
                 let newMessengerObject =
                 {
                     url: 'https://randomuser.me/api/portraits/men/50.jpg',
                     showUrl: false,
                     messenger: typedText,
-                    timestamp: (new Date()).getTime(),  
+                    timestamp: (new Date()).getTime(),    // getTime() lấy dữ liệu hiện tại 
                 }
 
                 const newPostKey = push(child(ref(db), 'chats')).key;
@@ -190,8 +191,28 @@ function Messenger(props) {
                 updates[`chats/${myUserId}-${myFriendUserId}` + newPostKey] = newMessengerObject;
                 update(ref(db), updates).then(() => setTypedText(''))
 
-                Keyboard.dismiss()     
+
+                // hàm push đẩy dữ liệu lên này tạo key ramdom khó kiểm soát -> k sài được 
+                // const postListRef = ref(db, `chats/${myUserId}-${myFriendUserId}`);
+                // const newPostRef = push(postListRef, newMessengerObject) ;
+
+
+                // set() làm thay thế hết các dữ liệu đã có nên không thể sử dụng trong trường hợp này 
+                // set(ref(db, `chats/${myUserId}-${myFriendUserId}`), newMessengerObject)
+                //     .then(() => setTypedText(''))
+
+                //"id1-id2": {messenger object}
+                Keyboard.dismiss()      // gửi xong để bàn phím cụp xuống
+
+                // Khi mà ấn gửi cái là flatView tự động scroll xuống dưới cùng
                 listViewRef.scrollToEnd({ animated: true })
+
+                // listViewRef.scrollToItem({viewPosition : 1 , index: messageLength-1 });  
+                // listViewRef.scrollToIndex({viewPosition : 1 , index: messageLength-1 });
+
+
+                // Để nó có thể tự động cuộn lên trên cùng đoạn tin nhắn 
+                // listViewRef.scrollToOffset({offset: 20, animated : true})   // Dịch xuống 1 đoạn 20px 
             }}
 
 

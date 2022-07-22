@@ -20,7 +20,9 @@ function Settings(props) {
     const [isUseFingerprint, setUseFingerprint] = useState(false)
     const [isEnabledChangePassword, setEnabledChangePassword] = useState(true)
 
+    //navigation
     const {navigation, route} = props
+    //functions of navigate to/back
     const {navigate, goBack} = navigation 
 
     return <View style={{
@@ -176,13 +178,13 @@ function Settings(props) {
                     size={20} color={'black'}
                 />
             </TouchableOpacity>
-            <TouchableOpacity style={{       
+            <TouchableOpacity style={{       // Đây là nút đăng xuất ra 
                 flexDirection: 'row',
                 paddingVertical: 10,                
                 alignItems: 'center',
             }} onPress={()=>{
-                auth.signOut()     
-                navigation.dispatch(StackActions.popToTop())    
+                auth.signOut()     // Đây là để đăng xuất ra khỏi tài khoản trên firebase
+                navigation.dispatch(StackActions.popToTop())    // Ấn nút đăng xuất cái là chạy ra ngay stack màn hình đầu tiên -- cũng có thể làm cách khác là bắt .then của hàm signOut()  để đảm bao đăng xuất ra rồi mới thoát màn hình 
             }}>
                 <Icon
                     name='sign-out-alt'
@@ -237,6 +239,7 @@ function Settings(props) {
                 <Switch
                     trackColor={{ false: colors.inactive, true:  colors.primary}}
                     thumbColor={isEnabledLockApp ? colors.primary : colors.inactive}
+                    //ios_backgroundColor="#3e3e3e"
                     onValueChange={()=>{
                         setEnabledLockApp(!isEnabledLockApp)
                     }}

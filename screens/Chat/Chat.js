@@ -89,25 +89,26 @@ function Chat(props) {
                 fontSize: fontSizes.h6,
                 marginStart: 10,
             }}>6 unread messages</Text>
-            <Icon
+            <Icon            
                 name={'search'}
                 style={{ padding: 15 }}
                 size={15} color={'black'}
-                onPress={() => {
+                onPress={()=>{
                     alert('You pressed Delete')
                 }}
             />
         </View>
 
-        <FlatList style={{
-        }}
-            data={users}
-            renderItem={({ item }) => <ChatItem
-                onPress={() => {
-                    navigate('Messenger', { user: item })
-                }}
-                user={item}
-                key={item.url} />}
+        <FlatList style={{                
+        }} 
+        data={users}
+        renderItem={({item}) => <ChatItem             
+            onPress={()=> {                        
+                //alert(`You press item's name: ${item.name}`)
+                navigate('Messenger', {user: item})
+            }}
+            user = {item} 
+            key={item.url}/>}            
         />
     </View>
 }
